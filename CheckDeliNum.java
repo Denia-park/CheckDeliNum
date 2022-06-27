@@ -14,9 +14,6 @@ public class CheckDeliNum {
         String fileName = "parcelExcel.xlsx"; //파일명 설정
         readExcel(path,fileName);
 
-        //이진 검색 진행
-        //기존에 있는 데이터를 삭제 ? 굳이 ?
-
         //다운로드 받은 poi 파일 주소 : https://archive.apache.org/dist/poi/release/bin/
         //참고한 블로그 글 : https://yangsosolife.tistory.com/7  , https://yangsosolife.tistory.com/8
 
@@ -26,10 +23,8 @@ public class CheckDeliNum {
         try {
             FileInputStream file = new FileInputStream(path+"\\"+fileName);
             XSSFWorkbook workbook = new XSSFWorkbook(file);
-            NumberFormat f = NumberFormat.getInstance();
-            f.setGroupingUsed(false);	//지수로 안나오게 설정
-
-            XSSFSheet sheet = workbook.getSheetAt(0);
+            
+            XSSFSheet sheet = workbook.getSheetAt(0); // 첫번째 시트만 사용
 
             //행 갯수
             int rows = sheet.getPhysicalNumberOfRows();
@@ -45,38 +40,23 @@ public class CheckDeliNum {
 
                 System.out.print("|	" + r + "	|");
 
-                showCells(f, row, DELIVERY_NUMBER);
-                showCells(f, row, ORDER_NUMBER);
+                showCells(row, DELIVERY_NUMBER);
+                showCells(row, ORDER_NUMBER);
 
                 System.out.println();
             }
         } catch(IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    private static void showCells(NumberFormat f, XSSFRow row, int cellIndex) {
+    private static void showCells(XSSFRow row, int cellIndex) {
         //열 표시
             XSSFCell cell = row.getCell(cellIndex);
 
             String value = "";
             if(cell!=null) {
-                //타입 체크
-                switch(cell.getCellType()) {
-                    case STRING:
-                        value = cell.getStringCellValue();
-                        break;
-                    case NUMERIC:
-                        value = f.format(cell.getNumericCellValue())+"";
-                        break;
-                    case BLANK:
-                        value = cell.getBooleanCellValue()+"";
-                        break;
-                    case ERROR:
-                        value = cell.getErrorCellValue()+"";
-                        break;
-                }
+                value = cell.getStringCellValue(); // 무조건 스트링값만 사용
             }
             System.out.print("		"+value+"		|");
     }
