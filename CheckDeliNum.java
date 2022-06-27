@@ -17,6 +17,7 @@ import java.util.Scanner;
 
 public class CheckDeliNum {
     static final String PROGRAM_VERSION = "Version : 1.0 , UpdateDate : 22년 6월 28일";
+    static String fileNameCSV = getStringOfNowLocalDateTime();
     static final int DELIVERY_NUMBER_CELL_INDEX = 6; //G [0부터 시작임.]
     static final int ORDER_NUMBER_CELL_INDEX = 9; //J [0부터 시작임.]
 
