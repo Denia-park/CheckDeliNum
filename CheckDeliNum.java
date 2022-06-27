@@ -3,6 +3,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class CheckDeliNum {
         System.out.println("송장 번호 등록 프로그램을 시작합니다. [ " + PROGRAM_VERSION + " ]");
 
         HashMap<String, String> hashMap = new HashMap<>(3000);//초기 용량(capacity)지정
+        Toolkit toolkit = Toolkit.getDefaultToolkit(); // 비프음 내기 위해서 생성해야할 인스턴스
 
         String path = System.getProperty("user.dir"); //현재 작업 경로
         String fileName = "parcelExcel.xlsx"; //파일명 설정
@@ -52,6 +54,7 @@ public class CheckDeliNum {
             if (orderNumber == null) {
                 System.out.print("입력하신 송장번호 와 매칭되는 주문번호가 없습니다. \n"
                 + "다시 확인해주세요! \n\n");
+                toolkit.beep();
 
                 continue;
             }else {
