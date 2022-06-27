@@ -10,7 +10,7 @@ import java.text.NumberFormat;
 
 public class CheckDeliNum {
     public static void main(String[] args) {
-        String path = "C:\\"; //파일 경로
+        String path = System.getProperty("user.dir"); //현재 작업 경로
         String fileName = "parcelExcel.xlsx"; //파일명 설정
         readExcel(path,fileName);
 
@@ -24,7 +24,7 @@ public class CheckDeliNum {
 
     public static void readExcel(String path, String fileName){
         try {
-            FileInputStream file = new FileInputStream(path+fileName);
+            FileInputStream file = new FileInputStream(path+"\\"+fileName);
             XSSFWorkbook workbook = new XSSFWorkbook(file);
             NumberFormat f = NumberFormat.getInstance();
             f.setGroupingUsed(false);	//지수로 안나오게 설정
