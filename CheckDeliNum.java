@@ -29,51 +29,55 @@ public class CheckDeliNum {
             NumberFormat f = NumberFormat.getInstance();
             f.setGroupingUsed(false);	//지수로 안나오게 설정
 
-            //시트 갯수
-            int sheetNum = workbook.getNumberOfSheets();
+            XSSFSheet sheet = workbook.getSheetAt(0);
 
-            for(int s = 0; s < sheetNum; s++) {
-                XSSFSheet sheet = workbook.getSheetAt(s);
-                //행 갯수
-                int rows = sheet.getPhysicalNumberOfRows();
+            //행 갯수
+            int rows = sheet.getPhysicalNumberOfRows();
 
-                //행 표시
-                for(int r = 0 ; r < rows ; r++) {
-                    XSSFRow row = sheet.getRow(r);
+            //행 표시
+            for(int r = 0 ; r < rows ; r++) {
+                XSSFRow row = sheet.getRow(r);
 
-                    int cells = row.getPhysicalNumberOfCells();
+                final int DELIVERY_NUMBER = 6; //G [0부터 시작임.]
+                final int ORDER_NUMBER = 9; //J [0부터 시작임.]
 
-                    System.out.print("|	" + r + "	|");
-                    //열 표시
-                    for(int c = 0 ; c < cells; c++) {
-                        XSSFCell cell = row.getCell(c);
+                int cells = row.getPhysicalNumberOfCells();
 
-                        String value = "";
-                        if(cell!=null) {
-                            //타입 체크
-                            switch(cell.getCellType()) {
-                                case STRING:
-                                    value = cell.getStringCellValue();
-                                    break;
-                                case NUMERIC:
-                                    value = f.format(cell.getNumericCellValue())+"";
-                                    break;
-                                case BLANK:
-                                    value = cell.getBooleanCellValue()+"";
-                                    break;
-                                case ERROR:
-                                    value = cell.getErrorCellValue()+"";
-                                    break;
-                            }
-                        }
-                        System.out.print("		"+value+"		|");
-                    }
-                    System.out.println();
-                }
+                System.out.print("|	" + r + "	|");
+
+                showCells(f, row, DELIVERY_NUMBER);
+                showCells(f, row, ORDER_NUMBER);
+
+                System.out.println();
             }
         } catch(IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private static void showCells(NumberFormat f, XSSFRow row, int cellIndex) {
+        //열 표시
+            XSSFCell cell = row.getCell(cellIndex);
+
+            String value = "";
+            if(cell!=null) {
+                //타입 체크
+                switch(cell.getCellType()) {
+                    case STRING:
+                        value = cell.getStringCellValue();
+                        break;
+                    case NUMERIC:
+                        value = f.format(cell.getNumericCellValue())+"";
+                        break;
+                    case BLANK:
+                        value = cell.getBooleanCellValue()+"";
+                        break;
+                    case ERROR:
+                        value = cell.getErrorCellValue()+"";
+                        break;
+                }
+            }
+            System.out.print("		"+value+"		|");
     }
 }
