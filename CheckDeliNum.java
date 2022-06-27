@@ -92,4 +92,15 @@ public class CheckDeliNum {
             }
             System.out.print("		"+value+"		|");
     }
+
+    private static String getCell(XSSFRow row, int cellIndex) {
+        //열 표시
+            XSSFCell cell = row.getCell(cellIndex);
+
+        if (cell != null) {
+            return cell.getStringCellValue(); // 무조건 스트링값만 사용된다
+        } else {
+            return null;
+        }
+    }
 }
