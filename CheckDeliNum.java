@@ -5,6 +5,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.*;
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -54,10 +56,35 @@ public class CheckDeliNum {
                 continue;
             }
             //주문번호 확인이 되면 CSV 파일에 내용을 추가 (추가할때 "상품별주문번호"도 추가해줘야함)
-
+            writeDataToCSV(path);
         }
 
         System.out.println("사용해주셔서 감사합니다.");
+    }
+
+    private static void writeDataToCSV(String path) {
+
+        String fileNameCSV = getStringOfNowLocalDateTime();
+
+        File file = new File(path, fileNameCSV);
+
+    }
+
+    private static String getStringOfNowLocalDateTime() {
+        // 현재 날짜/시간
+        LocalDateTime now = LocalDateTime.now();
+
+//        // 현재 날짜/시간 출력
+//        System.out.println(now); // 2021-06-17T06:43:21.419878100
+
+        // 포맷팅
+        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyMMdd_HH_mm_ss"));
+
+//        // 포맷팅 현재 날짜/시간 출력
+//        System.out.println(formatedNow);  // 2021년 06월 17일 06시 43분 21초
+
+        return "CSV_" + formatedNow + ".csv"; //Ex) CSV_220628_02_38_02
+
     }
 
     private static boolean isValidBarcodeNumInHashMap(HashMap<String, String> hashMap, String barcodeNumber, Toolkit toolkit) {
