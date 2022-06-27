@@ -20,6 +20,8 @@ public class CheckDeliNum {
     public static void main(String[] args) {
         System.out.println("송장 번호 등록 프로그램을 시작합니다. [ " + PROGRAM_VERSION + " ]");
 
+        HashMap<String, String> hashMap = new HashMap<>(3000);//초기 용량(capacity)지정
+
         String path = System.getProperty("user.dir"); //현재 작업 경로
         String fileName = "parcelExcel.xlsx"; //파일명 설정
 
@@ -28,11 +30,11 @@ public class CheckDeliNum {
             return; //프로그램 종료
         }
 
-        saveReadDataToHashMap(readSheet); //읽은 엑셀 파일 HashMap으로 저장
+        saveReadDataToHashMap(readSheet,hashMap); //읽은 엑셀 파일 HashMap으로 저장
 
         System.out.print("Excel 파일을 읽었습니다. \n" +
                 "이제 바코드를 입력해주시면 됩니다!!! \n" +
-                "===========================================================================");
+                "===========================================================================\n");
         
         //바코드 입력을 무한으로 Read , "qq" 입력이 들어오면 프로그램 종료
         
@@ -53,9 +55,7 @@ public class CheckDeliNum {
         }
     }
 
-    public static void saveReadDataToHashMap(XSSFSheet sheet){
-        HashMap<String,String> hashMap = new HashMap<>(3000);//초기 용량(capacity)지정
-
+    public static void saveReadDataToHashMap(XSSFSheet sheet , HashMap<String,String> hashMap){
         //행 갯수 가져오기
         int rows = sheet.getPhysicalNumberOfRows();
 
