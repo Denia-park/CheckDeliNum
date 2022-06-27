@@ -13,9 +13,9 @@ import java.util.HashMap;
 //※버전 1.0 - 22년 6월 28일
 
 public class CheckDeliNum {
-    static final int DELIVERY_NUMBER = 6; //G [0부터 시작임.]
-    static final int ORDER_NUMBER = 9; //J [0부터 시작임.]
     static final String PROGRAM_VERSION = "Version : 1.0 , UpdateDate : 22년 6월 28일";
+    static final int DELIVERY_NUMBER_CELL_INDEX = 6; //G [0부터 시작임.]
+    static final int ORDER_NUMBER_CELL_INDEX = 9; //J [0부터 시작임.]
 
     public static void main(String[] args) {
         System.out.println("송장 번호 등록 프로그램을 시작합니다. [ " + PROGRAM_VERSION + " ]");
@@ -82,7 +82,7 @@ public class CheckDeliNum {
         System.out.print("|	" + rowIndex + "	|");
     }
 
-    private static void showCells(XSSFRow row, int cellIndex) {
+    private static void showCell(XSSFRow row, int cellIndex) {
         //열 표시
             XSSFCell cell = row.getCell(cellIndex);
 
