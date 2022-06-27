@@ -6,6 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Scanner;
 
 //다운로드 받은 poi 파일 주소 : https://archive.apache.org/dist/poi/release/bin/
 //참고한 블로그 글 : https://yangsosolife.tistory.com/7  , https://yangsosolife.tistory.com/8 , https://junghn.tistory.com/entry/JAVA-%EC%9E%90%EB%B0%94-POI-%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%EC%97%91%EC%85%80-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EC%97%91%EC%85%80-%EC%9D%BD%EA%B8%B0-3?category=870199
@@ -35,12 +36,44 @@ public class CheckDeliNum {
         System.out.print("Excel 파일을 읽었습니다. \n" +
                 "이제 바코드를 입력해주시면 됩니다!!! \n" +
                 "===========================================================================\n");
-        
-        //바코드 입력을 무한으로 Read , "qq" 입력이 들어오면 프로그램 종료
-        
-        //바코드 입력이 들어오면 HashMap에서 주문번호 확인
-        
-        //주문번호 확인이 되면 CSV 파일에 내용을 추가 (추가할때 "상품별주문번호"도 추가해줘야함)
+
+        Scanner sc = new Scanner(System.in);
+
+        while(true){
+            //바코드 입력을 무한으로 Read , "qq" 입력이 들어오면 프로그램 종료
+            String barcodeNumber = getBarcodeNumber(sc).replace("\n", ""); // \n을 없애고 저장
+//            System.out.println(barcodeNumber);
+            if (barcodeNumber.equals("qq") || barcodeNumber.equals("QQ")) {
+                break;
+            }
+
+            //바코드 입력이 들어오면 HashMap에서 주문번호 확인
+            String orderNumber = hashMap.get(barcodeNumber);
+            if (orderNumber == null) {
+                System.out.print("입력하신 송장번호 와 매칭되는 주문번호가 없습니다. \n"
+                + "다시 확인해주세요! \n\n");
+
+                continue;
+            }else {
+                System.out.println(orderNumber);
+            }
+            //주문번호 확인이 되면 CSV 파일에 내용을 추가 (추가할때 "상품별주문번호"도 추가해줘야함)
+
+        }
+
+        System.out.println("사용해주셔서 감사합니다.");
+    }
+
+    private static String getBarcodeNumber(Scanner sc) {
+        String buffer,BarcodeNumber;
+        //        buffer = sc.nextLine();
+
+        System.out.println("바코드 번호를 입력하세요");
+
+        BarcodeNumber = sc.nextLine();
+
+        return BarcodeNumber;
+
     }
 
     public static XSSFSheet readExcel(String path, String fileName){
