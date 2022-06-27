@@ -23,7 +23,7 @@ public class CheckDeliNum {
 
         HashMap<String, String> hashMap = new HashMap<>(3000);//초기 용량(capacity)지정
 
-        String path = System.getProperty("user.dir"); //현재 작업 경로
+        String path = System.getProperty("user.dir") + "\\"; //현재 작업 경로
         String fileName = "parcelExcel.xlsx"; //파일명 설정
 
         XSSFSheet sheetDataFromExcel = readExcel(path, fileName); //엑셀 파일 Read
@@ -88,7 +88,7 @@ public class CheckDeliNum {
 
     public static XSSFSheet readExcel(String path, String fileName){
         try {
-            FileInputStream file = new FileInputStream(path + "\\" + fileName);
+            FileInputStream file = new FileInputStream(path + fileName);
             XSSFWorkbook workbook = new XSSFWorkbook(file);
             
             return workbook.getSheetAt(0); // 첫번째 시트만 사용
