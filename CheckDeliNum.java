@@ -28,7 +28,7 @@ public class CheckDeliNum {
             return; //프로그램 종료
         }
 
-//        saveReadDataToHashMap(readSheet); //읽은 엑셀 파일 HashMap으로 저장
+        saveReadDataToHashMap(readSheet); //읽은 엑셀 파일 HashMap으로 저장
 
         System.out.print("Excel 파일을 읽었습니다. \n" +
                 "이제 바코드를 입력해주시면 됩니다!!! \n" +
@@ -54,26 +54,33 @@ public class CheckDeliNum {
     }
 
     public static void saveReadDataToHashMap(XSSFSheet sheet){
-        if (sheet == null) {
-            return;
-        }
-        //행 갯수
+        HashMap<String,String> hashMap = new HashMap<>(3000);//초기 용량(capacity)지정
+
+        //행 갯수 가져오기
         int rows = sheet.getPhysicalNumberOfRows();
 
-        //행 표시
+        //반드시 "행(row)"을 읽고 "열(cell)"을 읽어야함 ..
         for(int rowIndex = 0 ; rowIndex < rows ; rowIndex++) {
             XSSFRow row = sheet.getRow(rowIndex);
+            String deliveryNumber = getCell(row, DELIVERY_NUMBER_CELL_INDEX);
+            String orderNumber = getCell(row, ORDER_NUMBER_CELL_INDEX);
 
+            if(deliveryNumber == null){
+                throw new RuntimeException("송장 번호 가 Null 입니다. ");
+            } else if (orderNumber == null) {
+                throw new RuntimeException("주문 번호 가 Null 입니다. ");
+            }
 
+            //showRowsAndCells(rowIndex, row); // 저장되는 데이터를 표시
 
-            showRowsAndCells(rowIndex, row);
+            hashMap.put(deliveryNumber, orderNumber);
         }
     }
 
     private static void showRowsAndCells(int rowIndex, XSSFRow row) {
         showRow(rowIndex);
-        showCells(row, DELIVERY_NUMBER);
-        showCells(row, ORDER_NUMBER);
+        showCell(row, DELIVERY_NUMBER_CELL_INDEX);
+        showCell(row, ORDER_NUMBER_CELL_INDEX);
         System.out.println();
     }
 
