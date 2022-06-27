@@ -60,7 +60,7 @@ public class CheckDeliNum {
         int rows = sheet.getPhysicalNumberOfRows();
 
         //반드시 "행(row)"을 읽고 "열(cell)"을 읽어야함 ..
-        for(int rowIndex = 0 ; rowIndex < rows ; rowIndex++) {
+        for(int rowIndex = 1 ; rowIndex < rows ; rowIndex++) {
             XSSFRow row = sheet.getRow(rowIndex);
             String deliveryNumber = getCell(row, DELIVERY_NUMBER_CELL_INDEX);
             String orderNumber = getCell(row, ORDER_NUMBER_CELL_INDEX);
