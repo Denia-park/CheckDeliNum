@@ -52,7 +52,8 @@ public class CheckDeliNum {
             }
 
             //바코드 입력이 들어오면 HashMap에서 주문번호 확인
-            if(!isValidBarcodeNumInHashMap(hashMap, barcodeNumber, toolkit)){
+            ActualData actualData = getActualData(hashMap, barcodeNumber, toolkit);
+            if(!actualData.isValidBarcodeNumInHashMap){
                 continue;
             }
             //주문번호 확인이 되면 CSV 파일에 내용을 추가 (추가할때 "상품별주문번호"도 추가해줘야함)
@@ -87,18 +88,21 @@ public class CheckDeliNum {
 
     }
 
-    private static boolean isValidBarcodeNumInHashMap(HashMap<String, String> hashMap, String barcodeNumber, Toolkit toolkit) {
+    private static ActualData getActualData(HashMap<String, String> hashMap, String barcodeNumber, Toolkit toolkit) {
         String orderNumber = hashMap.get(barcodeNumber);
+        boolean isValid;
         if (orderNumber == null) {
             System.out.print("입력하신 송장번호 와 매칭되는 주문번호가 없습니다. \n"
                     + "다시 확인해주세요! \n\n");
             toolkit.beep();
 
-            return false;
+            isValid = false;
+        }else{
+            //System.out.println(orderNumber);
+            isValid = true;
         }
 
-        System.out.println(orderNumber);
-        return true;
+        return new ActualData(barcodeNumber, orderNumber, isValid);
     }
 
     private static String getBarcodeNumber(Scanner sc) {
@@ -179,5 +183,37 @@ public class CheckDeliNum {
         } else {
             return null;
         }
+    }
+}
+
+class ActualData {
+    String deliveryNumber;
+    String orderNumber;
+    boolean isValidBarcodeNumInHashMap;
+
+    public String getDeliveryNumber() {
+        return deliveryNumber;
+    }
+
+    public void setDeliveryNumber(String deliveryNumber) {
+        this.deliveryNumber = deliveryNumber;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public void setValidBarcodeNumInHashMap(boolean validBarcodeNumInHashMap) {
+        this.isValidBarcodeNumInHashMap = validBarcodeNumInHashMap;
+    }
+
+    public ActualData(String deliveryNumber, String orderNumber, boolean isValidBarcodeNumInHashMap) {
+        this.deliveryNumber = deliveryNumber;
+        this.orderNumber = orderNumber;
+        this.isValidBarcodeNumInHashMap = isValidBarcodeNumInHashMap;
     }
 }
