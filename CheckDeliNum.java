@@ -1,3 +1,4 @@
+import com.opencsv.CSVWriter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -5,6 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import java.util.Scanner;
 
 public class CheckDeliNum {
     static final String PROGRAM_VERSION = "Version : 1.0 , UpdateDate : 22년 6월 28일";
+    static boolean FILE_START_FLAG = true;
     static String fileNameCSV = getStringOfNowLocalDateTime();
     static final int DELIVERY_NUMBER_CELL_INDEX = 6; //G [0부터 시작임.]
     static final int ORDER_NUMBER_CELL_INDEX = 9; //J [0부터 시작임.]
@@ -58,18 +61,42 @@ public class CheckDeliNum {
                 continue;
             }
             //주문번호 확인이 되면 CSV 파일에 내용을 추가 (추가할때 "상품별주문번호"도 추가해줘야함)
-            writeDataToCSV(path);
+            writeDataToCSV(path,actualData);
         }
 
         System.out.println("사용해주셔서 감사합니다.");
     }
 
-    private static void writeDataToCSV(String path) {
-
-        String fileNameCSV = getStringOfNowLocalDateTime();
-
+    private static void writeDataToCSV(String path, ActualData actualData) {
         File file = new File(path, fileNameCSV);
+        try (
+                FileOutputStream fos = new FileOutputStream(file,true);
+                OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+                CSVWriter writer = new CSVWriter(osw);
+        ) {
+            if(FILE_START_FLAG){
+                String[] title = {
+                        "주문번호",
+                        "상품별주문번호",
+                        "운송장번호",
+                        "택배업체코드"
+                };
+                writer.writeNext(title,false);
+                FILE_START_FLAG = false;
+            }
 
+            String[] writeData = {
+                    actualData.getOrderNumber(), //주문번호
+                    actualData.getOrderNumber() + "_1", //상품별 주문번호
+                    actualData.getDeliveryNumber(), //운송장번호
+                    null //택배업체코드 인데 안쓰므로 공백
+            };
+            writer.writeNext(writeData,false);
+            System.out.println("등록되었습니다.!");
+            System.out.println();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static String getStringOfNowLocalDateTime() {
