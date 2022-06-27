@@ -4,8 +4,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -51,21 +50,28 @@ public class CheckDeliNum {
             }
 
             //바코드 입력이 들어오면 HashMap에서 주문번호 확인
-            String orderNumber = hashMap.get(barcodeNumber);
-            if (orderNumber == null) {
-                System.out.print("입력하신 송장번호 와 매칭되는 주문번호가 없습니다. \n"
-                + "다시 확인해주세요! \n\n");
-                toolkit.beep();
-
+            if(!isValidBarcodeNumInHashMap(hashMap, barcodeNumber, toolkit)){
                 continue;
-            }else {
-                System.out.println(orderNumber);
             }
             //주문번호 확인이 되면 CSV 파일에 내용을 추가 (추가할때 "상품별주문번호"도 추가해줘야함)
 
         }
 
         System.out.println("사용해주셔서 감사합니다.");
+    }
+
+    private static boolean isValidBarcodeNumInHashMap(HashMap<String, String> hashMap, String barcodeNumber, Toolkit toolkit) {
+        String orderNumber = hashMap.get(barcodeNumber);
+        if (orderNumber == null) {
+            System.out.print("입력하신 송장번호 와 매칭되는 주문번호가 없습니다. \n"
+                    + "다시 확인해주세요! \n\n");
+            toolkit.beep();
+
+            return false;
+        }
+
+        System.out.println(orderNumber);
+        return true;
     }
 
     private static String getBarcodeNumber(Scanner sc) {
