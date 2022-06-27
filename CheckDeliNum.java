@@ -23,23 +23,24 @@ public class CheckDeliNum {
         System.out.println("송장 번호 등록 프로그램을 시작합니다. [ " + PROGRAM_VERSION + " ]");
 
         HashMap<String, String> hashMap = new HashMap<>(3000);//초기 용량(capacity)지정
-        Toolkit toolkit = Toolkit.getDefaultToolkit(); // 비프음 내기 위해서 생성해야할 인스턴스
 
         String path = System.getProperty("user.dir"); //현재 작업 경로
         String fileName = "parcelExcel.xlsx"; //파일명 설정
 
-        XSSFSheet readSheet = readExcel(path, fileName); //엑셀 파일 Read
-        if (readSheet == null) {
+        XSSFSheet sheetDataFromExcel = readExcel(path, fileName); //엑셀 파일 Read
+        if (sheetDataFromExcel == null) { //파일을 못 읽어오면 종료.
+            System.out.println("파일을 찾지 못했으므로 종료 합니다.");
             return; //프로그램 종료
         }
 
-        saveReadDataToHashMap(readSheet,hashMap); //읽은 엑셀 파일 HashMap으로 저장
+        saveReadDataToHashMap(sheetDataFromExcel,hashMap); //읽은 엑셀 파일 HashMap으로 저장
 
-        System.out.print("Excel 파일을 읽었습니다. \n" +
+        System.out.print("Excel 파일을 읽었습니다. \n\n" +
                 "이제 바코드를 입력해주시면 됩니다!!! \n" +
-                "===========================================================================\n");
+                "===========================================================================\n\n");
 
-        Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in); // 사용자로부터 데이터를 받기 위한 Scanner
+        Toolkit toolkit = Toolkit.getDefaultToolkit(); // 비프음 내기 위해서 생성해야할 인스턴스
 
         while(true){
             //바코드 입력을 무한으로 Read , "qq" 입력이 들어오면 프로그램 종료
@@ -68,7 +69,7 @@ public class CheckDeliNum {
     }
 
     private static String getBarcodeNumber(Scanner sc) {
-        String buffer,BarcodeNumber;
+        String buffer, BarcodeNumber;
         //        buffer = sc.nextLine();
 
         System.out.println("바코드 번호를 입력하세요");
