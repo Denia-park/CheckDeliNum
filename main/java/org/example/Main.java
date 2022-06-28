@@ -1,3 +1,5 @@
+package org.example;
+
 import com.opencsv.CSVWriter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -17,9 +19,8 @@ import java.util.Scanner;
 //다운로드 받은 poi 파일 주소 : https://archive.apache.org/dist/poi/release/bin/
 //참고한 블로그 글 : https://yangsosolife.tistory.com/7  , https://yangsosolife.tistory.com/8 , https://junghn.tistory.com/entry/JAVA-%EC%9E%90%EB%B0%94-POI-%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%EC%97%91%EC%85%80-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EC%97%91%EC%85%80-%EC%9D%BD%EA%B8%B0-3?category=870199
 
-//※버전 1.0 - 22년 6월 28일
+public class Main {
 
-public class CheckDeliNum {
     static final String PROGRAM_VERSION = "Version : 1.1 , UpdateDate : 22년 6월 29일";
     static boolean FILE_START_FLAG = true;
     static int completeDeliProduct = 0;
@@ -166,7 +167,7 @@ public class CheckDeliNum {
         try {
             FileInputStream file = new FileInputStream(path + fileName);
             XSSFWorkbook workbook = new XSSFWorkbook(file);
-            
+
             return workbook.getSheetAt(0); // 첫번째 시트만 사용
         } catch(IOException e) {
             e.printStackTrace();
@@ -210,55 +211,23 @@ public class CheckDeliNum {
 
     private static void showCell(XSSFRow row, int cellIndex) {
         //열 표시
-            XSSFCell cell = row.getCell(cellIndex);
+        XSSFCell cell = row.getCell(cellIndex);
 
-            String value = "";
-            if(cell!=null) {
-                value = cell.getStringCellValue(); // 무조건 스트링값만 사용
-            }
-            System.out.print("		"+value+"		|");
+        String value = "";
+        if(cell!=null) {
+            value = cell.getStringCellValue(); // 무조건 스트링값만 사용
+        }
+        System.out.print("		"+value+"		|");
     }
 
     private static String getCell(XSSFRow row, int cellIndex) {
         //열 표시
-            XSSFCell cell = row.getCell(cellIndex);
+        XSSFCell cell = row.getCell(cellIndex);
 
         if (cell != null) {
             return cell.getStringCellValue(); // 무조건 스트링값만 사용된다
         } else {
             return null;
         }
-    }
-}
-
-class ActualData {
-    String deliveryNumber;
-    String orderNumber;
-    boolean isValidBarcodeNumInHashMap;
-
-    public String getDeliveryNumber() {
-        return deliveryNumber;
-    }
-
-    public void setDeliveryNumber(String deliveryNumber) {
-        this.deliveryNumber = deliveryNumber;
-    }
-
-    public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    public void setValidBarcodeNumInHashMap(boolean validBarcodeNumInHashMap) {
-        this.isValidBarcodeNumInHashMap = validBarcodeNumInHashMap;
-    }
-
-    public ActualData(String deliveryNumber, String orderNumber, boolean isValidBarcodeNumInHashMap) {
-        this.deliveryNumber = deliveryNumber;
-        this.orderNumber = orderNumber;
-        this.isValidBarcodeNumInHashMap = isValidBarcodeNumInHashMap;
     }
 }
