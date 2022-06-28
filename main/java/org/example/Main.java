@@ -33,13 +33,17 @@ public class Main {
 
         HashMap<String, String> hashMap = new HashMap<>(1500);//초기 용량(capacity)지정
         List<String> savedDeliNumList = new ArrayList<>(500);//초기 용량(capacity)지정
+        Scanner sc = new Scanner(System.in); // 사용자로부터 데이터를 받기 위한 Scanner
 
         String path = System.getProperty("user.dir") + "\\"; //현재 작업 경로
         String fileName = "parcelExcel.xlsx"; //파일명 설정
 
         XSSFSheet sheetDataFromExcel = readExcel(path, fileName); //엑셀 파일 Read
         if (sheetDataFromExcel == null) { //파일을 못 읽어오면 종료.
-            System.out.println("파일을 찾지 못했으므로 종료 합니다.");
+            System.out.println("파일을 찾지 못했으므로 프로그램을 종료 합니다.");
+
+            System.out.println("Enter 를 치면 정상 종료됩니다.");
+            sc.nextLine(); //프로그램 종료 전 Holding
             return; //프로그램 종료
         }
 
@@ -49,7 +53,6 @@ public class Main {
                 "이제 바코드를 입력해주시면 됩니다!!! \n" +
                 "===========================================================================\n\n");
 
-        Scanner sc = new Scanner(System.in); // 사용자로부터 데이터를 받기 위한 Scanner
         Toolkit toolkit = Toolkit.getDefaultToolkit(); // 비프음 내기 위해서 생성해야할 인스턴스
 
         while(true){
@@ -77,7 +80,8 @@ public class Main {
         }
 
         System.out.println("오늘 처리한 송장 개수 : "+ completeDeliProduct +" 개 , 사용해주셔서 감사합니다.");
-
+        System.out.println("Enter 를 치면 정상 종료됩니다.");
+        sc.nextLine(); //프로그램 종료 전 Holding
     }
 
     private static void writeDataToCSV(String path, ActualData actualData, List<String> savedDeliNumList) {
