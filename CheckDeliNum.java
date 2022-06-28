@@ -59,6 +59,13 @@ public class CheckDeliNum {
                 break;
             }
 
+            //이미 등록된 송장 번호 인지 확인하기.
+            if(savedDeliNumList.contains(barcodeNumber)){
+                System.out.println("이미 등록된 송장입니다.");
+                System.out.println();
+                continue;
+            }
+
             //바코드 입력이 들어오면 HashMap에서 주문번호 확인
             ActualData actualData = getActualData(hashMap, barcodeNumber, toolkit);
             if(!actualData.isValidBarcodeNumInHashMap){
@@ -88,12 +95,6 @@ public class CheckDeliNum {
                 };
                 writer.writeNext(title,false);
                 FILE_START_FLAG = false;
-            }
-
-            if(savedDeliNumList.contains(actualData.getDeliveryNumber())){
-                System.out.println("이미 등록된 송장입니다.");
-                System.out.println();
-                return;
             }
 
             String[] writeData = {
