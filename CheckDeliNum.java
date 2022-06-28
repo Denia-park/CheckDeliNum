@@ -9,7 +9,9 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 //다운로드 받은 poi 파일 주소 : https://archive.apache.org/dist/poi/release/bin/
@@ -18,8 +20,9 @@ import java.util.Scanner;
 //※버전 1.0 - 22년 6월 28일
 
 public class CheckDeliNum {
-    static final String PROGRAM_VERSION = "Version : 1.0 , UpdateDate : 22년 6월 28일";
+    static final String PROGRAM_VERSION = "Version : 1.1 , UpdateDate : 22년 6월 29일";
     static boolean FILE_START_FLAG = true;
+    static int completeDeliProduct = 0;
     static String fileNameCSV = getStringOfNowLocalDateTime();
     static final int DELIVERY_NUMBER_CELL_INDEX = 6; //G [0부터 시작임.]
     static final int ORDER_NUMBER_CELL_INDEX = 9; //J [0부터 시작임.]
@@ -27,7 +30,8 @@ public class CheckDeliNum {
     public static void main(String[] args) {
         System.out.println("송장 번호 등록 프로그램을 시작합니다. [ " + PROGRAM_VERSION + " ]");
 
-        HashMap<String, String> hashMap = new HashMap<>(3000);//초기 용량(capacity)지정
+        HashMap<String, String> hashMap = new HashMap<>(1500);//초기 용량(capacity)지정
+        List<String> savedDeliNumList = new ArrayList<>(500);//초기 용량(capacity)지정
 
         String path = System.getProperty("user.dir") + "\\"; //현재 작업 경로
         String fileName = "parcelExcel.xlsx"; //파일명 설정
@@ -61,13 +65,14 @@ public class CheckDeliNum {
                 continue;
             }
             //주문번호 확인이 되면 CSV 파일에 내용을 추가 (추가할때 "상품별주문번호"도 추가해줘야함)
-            writeDataToCSV(path,actualData);
+            writeDataToCSV(path,actualData,savedDeliNumList);
         }
 
-        System.out.println("사용해주셔서 감사합니다.");
+        System.out.println("오늘 처리한 송장 개수 : "+ completeDeliProduct +" 개 , 사용해주셔서 감사합니다.");
+
     }
 
-    private static void writeDataToCSV(String path, ActualData actualData) {
+    private static void writeDataToCSV(String path, ActualData actualData, List<String> savedDeliNumList) {
         File file = new File(path, fileNameCSV);
         try (
                 FileOutputStream fos = new FileOutputStream(file,true);
@@ -85,6 +90,12 @@ public class CheckDeliNum {
                 FILE_START_FLAG = false;
             }
 
+            if(savedDeliNumList.contains(actualData.getDeliveryNumber())){
+                System.out.println("이미 등록된 송장입니다.");
+                System.out.println();
+                return;
+            }
+
             String[] writeData = {
                     actualData.getOrderNumber(), //주문번호
                     actualData.getOrderNumber() + "_1", //상품별 주문번호
@@ -92,7 +103,12 @@ public class CheckDeliNum {
                     null //택배업체코드 인데 안쓰므로 공백
             };
             writer.writeNext(writeData,false);
-            System.out.println("등록되었습니다.!");
+            System.out.println("등록되었습니다!");
+
+            savedDeliNumList.add(actualData.getDeliveryNumber());
+            completeDeliProduct = savedDeliNumList.size();
+            System.out.println("오늘 처리한 송장 개수 : " + completeDeliProduct + " 개");
+
             System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
