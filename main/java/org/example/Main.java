@@ -21,7 +21,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    static final String PROGRAM_VERSION = "Version : 1.1 , UpdateDate : 22년 6월 29일";
+    static final String PROGRAM_VERSION = "Version : 1.2 , UpdateDate : 22년 7월 4일";
     static boolean FILE_START_FLAG = true;
     static int completeDeliProduct = 0;
     static String fileNameCSV = getStringOfNowLocalDateTime();
@@ -67,16 +67,17 @@ public class Main {
             if(savedDeliNumList.contains(barcodeNumber)){
                 System.out.println("이미 등록된 송장입니다.");
                 System.out.println();
+                toolkit.beep(); //등록된 경우에만 소리 발생
                 continue;
             }
 
             //바코드 입력이 들어오면 HashMap에서 주문번호 확인
-            ActualData actualData = getActualData(hashMap, barcodeNumber, toolkit);
+            ActualData actualData = getActualData(hashMap, barcodeNumber);
             if(!actualData.isValidBarcodeNumInHashMap){
                 continue;
             }
             //주문번호 확인이 되면 CSV 파일에 내용을 추가 (추가할때 "상품별주문번호"도 추가해줘야함)
-            writeDataToCSV(path,actualData,savedDeliNumList);
+            writeDataToCSV(path,actualData,savedDeliNumList,toolkit);
         }
 
         System.out.println("오늘 처리한 송장 개수 : "+ completeDeliProduct +" 개 , 사용해주셔서 감사합니다.");
@@ -84,12 +85,12 @@ public class Main {
         sc.nextLine(); //프로그램 종료 전 Holding
     }
 
-    private static void writeDataToCSV(String path, ActualData actualData, List<String> savedDeliNumList) {
+    private static void writeDataToCSV(String path, ActualData actualData, List<String> savedDeliNumList, Toolkit toolkit) {
         File file = new File(path, fileNameCSV);
         try (
                 FileOutputStream fos = new FileOutputStream(file,true);
                 OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-                CSVWriter writer = new CSVWriter(osw);
+                CSVWriter writer = new CSVWriter(osw)
         ) {
             if(FILE_START_FLAG){
                 String[] title = {
@@ -110,6 +111,7 @@ public class Main {
             };
             writer.writeNext(writeData,false);
             System.out.println("등록되었습니다!");
+            toolkit.beep();//등록된 경우에만 소리 발생
 
             savedDeliNumList.add(actualData.getDeliveryNumber());
             completeDeliProduct = savedDeliNumList.size();
@@ -138,13 +140,12 @@ public class Main {
 
     }
 
-    private static ActualData getActualData(HashMap<String, String> hashMap, String barcodeNumber, Toolkit toolkit) {
+    private static ActualData getActualData(HashMap<String, String> hashMap, String barcodeNumber) {
         String orderNumber = hashMap.get(barcodeNumber);
         boolean isValid;
         if (orderNumber == null) {
             System.out.print("입력하신 송장번호 와 매칭되는 주문번호가 없습니다. \n"
                     + "다시 확인해주세요! \n\n");
-            toolkit.beep();
 
             isValid = false;
         }else{
